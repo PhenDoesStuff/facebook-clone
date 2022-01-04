@@ -7,6 +7,8 @@ import { Avatar } from '@mui/material';
 import React, { useState } from 'react';
 import './PostManager.css';
 import { useStateValue } from '../../../../StateProvider';
+import db from '../../../../firebase';
+import firebase from 'firebase';
 
 function PostManager() {
 	const [{ user }, dispatch] = useStateValue();
@@ -16,7 +18,14 @@ function PostManager() {
 	const handleSubmit = e => {
 		e.preventDefault();
 
-		// some clever db stuff
+		db.collection('posts').add({
+			message: input,
+			timestamp:
+				firebase.firestore.FieldValue.serverTimestamp(),
+			profilePic: user.photoURL,
+			username: user.displayName,
+			image: imageUrl,
+		});
 
 		setInput('');
 		setImageUrl('');
@@ -36,7 +45,7 @@ function PostManager() {
 					<input
 						value={imageUrl}
 						onChange={e => setImageUrl(e.target.value)}
-						placeholder='image URL (optional)'
+						placeholder='Image URL (optional)'
 					/>
 					<button onClick={handleSubmit} type='submit'>
 						Hidden submit
