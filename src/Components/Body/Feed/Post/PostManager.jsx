@@ -6,8 +6,10 @@ import {
 import { Avatar } from '@mui/material';
 import React, { useState } from 'react';
 import './PostManager.css';
+import { useStateValue } from '../../../../StateProvider';
 
 function PostManager() {
+	const [{ user }, dispatch] = useStateValue();
 	const [input, setInput] = useState('');
 	const [imageUrl, setImageUrl] = useState('');
 
@@ -23,13 +25,13 @@ function PostManager() {
 	return (
 		<div className='PostManager'>
 			<div className='PostManager__top'>
-				<Avatar />
+				<Avatar src={user.photoURL} />
 				<form>
 					<input
 						value={input}
 						onChange={e => setInput(e.target.value)}
 						className='PostManager__input'
-						placeholder={`What's on your mind?`}
+						placeholder={`What's on your mind, ${user.displayName}?`}
 					/>
 					<input
 						value={imageUrl}

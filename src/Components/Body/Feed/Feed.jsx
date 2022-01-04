@@ -1,28 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Feed.css';
 import Post from './Post/Post';
 import PostManager from './Post/PostManager';
 import StoryReel from './StoryReels/StoryReel';
+import db from '../../../firebase';
 
 function Feed() {
+	const [posts, setPosts] = useState([]);
+
+	useEffect(() => {
+		db.collection('posts')
+			.orderBy('timestamp', 'desc')
+			.onSnapshot(snapshot =>
+				setPosts(
+					snapshot.docs.map(doc => ({
+						id: doc.id,
+						data: doc.data(),
+					}))
+				)
+			);
+	}, []);
+
 	return (
 		<div className='feed'>
 			<StoryReel />
 			<PostManager />
 
-			<Post
-				profilePic='https://avatars.githubusercontent.com/u/61070214?v=4'
-				message='Wow! This works'
-				timestamp='This is a timestamp'
-				username='Stephen Montague'
-				image='https://wallpapercave.com/wp/wp4241382.jpg'
-			/>
-			<Post
-				profilePic='https://avatars.githubusercontent.com/u/61070214?v=4'
-				message='Wow! This works'
-				timestamp='This is a timestamp'
-				username='Stephen Montague'
-			/>
+			{posts.map(post => (
+				<Post
+					key={post.data.id}
+					profilePic={post.data.profilePic}
+					message={post.data.message}
+					timestamp={post.data.timestamp}
+					username={post.data.username}
+					image={post.data.image}
+				/>
+			))}
 		</div>
 	);
 }

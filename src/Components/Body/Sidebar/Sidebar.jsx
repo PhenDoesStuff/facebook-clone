@@ -7,13 +7,16 @@ import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 import ChatIcon from '@mui/icons-material/Chat';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import { useStateValue } from '../../../StateProvider';
 
 function Sidebar() {
+	const [{ user }, dispatch] = useStateValue();
+
 	return (
 		<div className='sidebar'>
 			<SidebarRow
-				src='https://avatars.githubusercontent.com/u/61070214?v=4'
-				title='Stephen Montague'
+				src={user.photoURL}
+				title={user.displayName}
 			/>
 			<SidebarRow
 				Icon={LocalHospitalIcon}
